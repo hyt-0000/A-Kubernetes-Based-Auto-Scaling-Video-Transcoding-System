@@ -99,7 +99,8 @@ graph TD
 
 ## 💻 環境建置與安裝 (Installation & Prerequisites)
 
-### 1. 基礎環境準備
+### 1. clone專案
+### 2. 基礎環境準備
 
 在開始之前，請確保您的系統（建議使用 **Windows 11 + WSL2** 或 **Ubuntu Linux**）已安裝以下工具：
 
@@ -123,7 +124,7 @@ graph TD
 
 ---
 
-### 2. 啟動 Minikube 叢集
+### 3. 啟動 Minikube 叢集
 
 啟動 Minikube 並啟用所需的套件（Metrics Server 與 Ingress）：
 
@@ -138,7 +139,7 @@ minikube addons enable ingress
 
 ---
 
-### 3. 建置 Docker 映像檔至 Minikube 環境
+### 4. 建置 Docker 映像檔至 Minikube 環境
 
 為了讓 Minikube 能直接讀取本地建置的 Docker 映像檔，請執行以下指令將 Terminal 的 Docker 環境指向 Minikube：
 
@@ -155,7 +156,7 @@ docker build -t video-worker:latest ./worker
 
 ---
 
-### 4. 部署至 Kubernetes 叢集
+### 5. 部署至 Kubernetes 叢集
 
 依序套用 `k8s/` 目錄下的 YAML 設定檔：
 
