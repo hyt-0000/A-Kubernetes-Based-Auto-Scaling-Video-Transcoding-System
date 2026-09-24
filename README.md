@@ -100,6 +100,14 @@ graph TD
 ## 💻 環境建置與安裝 (Installation & Prerequisites)
 
 ### 1. clone專案
+
+```bash
+git clone https://github.com/hyt-0000/A-Kubernetes-Based-Auto-Scaling-Video-Transcoding-System
+cd A-Kubernetes-Based-Auto-Scaling-Video-Transcoding-System
+```
+
+---
+
 ### 2. 基礎環境準備
 
 在開始之前，請確保您的系統（建議使用 **Windows 11 + WSL2** 或 **Ubuntu Linux**）已安裝以下工具：
