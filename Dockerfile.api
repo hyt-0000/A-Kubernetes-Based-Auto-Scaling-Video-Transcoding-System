@@ -1,0 +1,16 @@
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# ★ 關鍵修改：從 app/ 子目錄複製 requirements.txt
+COPY app/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# ★ 關鍵修改：從 app/ 子目錄複製 api.py 程式碼
+COPY app/api.py .
+
+# 開放 FastAPI 預設的通訊埠 8000
+EXPOSE 8000
+
+# 啟動 Uvicorn 伺服器，讓 API 在 8000 port 監聽所有 IP (0.0.0.0)
+CMD ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]

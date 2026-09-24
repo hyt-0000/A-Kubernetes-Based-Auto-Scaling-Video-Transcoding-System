@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-api
+  template:
+    metadata:
+      labels:
+        app: video-api
+    spec:
+      containers:
+      - name: api
+        image: video-api:v9
+        imagePullPolicy: Never    # 一樣使用本地 Minikube 打包的 Image
+        ports:
+        - containerPort: 8000
+        env:
+        - name: RABBITMQ_HOST
+          value: "rabbitmq"
+        volumeMounts:
+        - name: video-storage     # ★ 關鍵：API 也必須掛載同一個共享硬碟
+          mountPath: /app/videos
+      volumes:
+      - name: video-storage
+        persistentVolumeClaim:
+          claimName: video-storage-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+spec:
+  type: NodePort                  # ★ 關鍵：將內部服務暴露給外部主機
+  selector:
+    app: video-api
+  ports:
+    - port: 8000
+      targetPort: 8000
+      nodePort: 30000             # 固定開通 30000 這個對外的門

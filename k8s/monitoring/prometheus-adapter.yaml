@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-adapter
+  namespace: default
+  labels:
+    app: prometheus-adapter
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-adapter
+  template:
+    metadata:
+      labels:
+        app: prometheus-adapter
+    spec:
+      containers:
+      - name: prometheus-adapter
+        image: registry.k8s.io/prometheus-adapter/prometheus-adapter:v0.10.0
+        args:
+        - --prometheus-url=http://prometheus-service.default.svc:9090
+        - --metrics-relist-interval=1m
+        - --v=4
+        ports:
+        - containerPort: 6443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: custom-metrics-apiserver
+  namespace: default
+spec:
+  selector:
+    app: prometheus-adapter
+  ports:
+  - port: 443
+    targetPort: 6443

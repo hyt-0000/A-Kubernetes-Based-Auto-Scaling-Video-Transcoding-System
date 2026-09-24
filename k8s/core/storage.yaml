@@ -1,0 +1,25 @@
+# 1. 定義實體儲存空間 (PV)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: video-storage-pv
+spec:
+  capacity:
+    storage: 2Gi                # 宣告 2GB 的空間（做專題測試很夠用了）
+  accessModes:
+    - ReadWriteMany             # 關鍵設定！允許多個 Pod 同時進行讀寫
+  hostPath:
+    path: "/data/video-storage" # 使用 Minikube 虛擬機內部的路徑來模擬硬碟
+
+---
+# 2. 定義空間申請單 (PVC)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: video-storage-pvc
+spec:
+  accessModes:
+    - ReadWriteMany             # 必須和 PV 的存取模式一致
+  resources:
+    requests:
+      storage: 1Gi              # 向 K8s 申請 1GB 的空間

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+spec:
+  replicas: 1                   # 測試階段我們先生出 1 個 Worker
+  selector:
+    matchLabels:
+      app: video-worker
+  template:
+    metadata:
+      labels:
+        app: video-worker
+    spec:
+      containers:
+      - name: worker
+        image: video-worker:v7
+        imagePullPolicy: Never  #強制 K8s 使用剛剛在本機打包好的 Image，不要去 Docker Hub 下載
+        resources:
+          requests:
+            cpu: "100m"     # 預設至少給 0.1 顆 CPU
+            memory: "256Mi" # 預設至少給 256 MB 記憶體
+          limits:
+            cpu: "800m"     # 最多只能吃到 0.5 顆 CPU
+            memory: "1Gi" # 最多只能吃到 512 MB 記憶體
+        env:
+        - name: RABBITMQ_HOST
+          value: "rabbitmq"     # ★ 連線設定：將環境變數設為 RabbitMQ Service 的名稱
+        - name: PYTHONUNBUFFERED  # 加入這個環境變數
+          value: "1"              # 設定為 1 代表不緩衝，直接輸出
+        volumeMounts:
+        - name: video-storage
+          mountPath: /app/videos # 將共享硬碟掛載到容器內的 /app/videos 資料夾
+      volumes:
+      - name: video-storage
+        persistentVolumeClaim:
+          claimName: video-storage-pvc # 綁定我們之前建好的 PVC 申請單

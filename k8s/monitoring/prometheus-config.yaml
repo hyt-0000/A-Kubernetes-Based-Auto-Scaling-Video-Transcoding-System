@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 5s # 為了專題展示能即時看到變化，我們設定每 5 秒抓取一次資料
+    scrape_configs:
+      - job_name: 'rabbitmq'
+        static_configs:
+          - targets: ['rabbitmq:15692'] # 告訴 Prometheus 去找名為 rabbitmq 的服務，並訪問 15692 port
